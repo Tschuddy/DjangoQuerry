@@ -10,9 +10,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="{% static 'css/main.css' %}">
-   
-    
-    
 </head>
 <body>
 
@@ -24,13 +21,11 @@
 
     <section class="filter-section py-3 bg-light">
         <div class="container text-end">
-            <!-- Button to trigger modal -->
             <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addUserModal">Add Now</button>
         </div>
     </section>
 
     <section class="container mt-5">
-        <!-- Table -->
         <div class="table-responsive">
             <table class="table align-middle table-bordered table-hover mt-4">
                 <thead class="table-dark">
@@ -42,86 +37,72 @@
                         <th>Status</th>
                         <th>Date Joined</th>
                         <th>Rating</th>
-                       <th>student type</th>
-                       <th>Actions</th>
+                        <th>Student Type</th>
+                        <th>Actions</th>
                     </tr>
                 </thead>
 
                 <tbody>
-                    <tr> 
-                        <td><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRMS3wbH84PsWS_j9jQ9r7UsHCw88OOlF-UCQ&s" alt="Profile" width="80" height="80" class="rounded-circle"></td>
-                        <td>Kajal Sharma</td>
-                        <td>Cohort 1</td>
-                        <td>Software Engineering</td>
-                        <td><span class="badge bg-success text-white">Online Exam</span></td>
-                        <td>2024-01-15</td>
-                        <td>4.5</td>
-                        <td><span class="badge bg-success text-white">member</span></td>
-                        <td>
-                            <a href="#" class="btn btn-sm btn-outline-primary">
-                                <i class="fas fa-eye"></i> View
-                            </a>
-                        </td>
-                    </tr>
-                    <!-- Add more rows as needed -->
-                </tbody>
-
-                <tbody>
-                    
-                    {% for eachstudent  in  students %}
-                    
-                    
-                    
+                    {% for homepage in students %}
                     <tr>  
-                        <td> {% if  eachstudent.student_profile.profile_picture.url %}
-                        <img src="{{eachstudent.student_profile.profile_picture.url}}" alt="Profile" width="80" height="80" class="rounded-circle">
-                        {% else %}
-                        <img src="https://w7.pngwing.com/pngs/340/946/png-transparent-avatar-user-computer-icons-software-developer-avatar-child-face-heroes-thumbnail.png" alt="Profile" width="80" height="80" class="rounded-circle">
-
-                        {% endif %}
-                        
+                        {% comment %} <td>
+                            <img src="{{ homepage.profile_image.url|default:'https://w7.pngwing.com/pngs/340/946/png-transparent-avatar-user-computer-icons-software-developer-avatar-child-face-heroes-thumbnail.png' }}" 
+                                 alt="Profile" width="80" height="80" class="rounded-circle"> {% endcomment %}
+                        <td> {% if  homepage.profile_image.url %}
+                                    <img src="{{homepage.profile_image.url}}" alt="Profile" width="80" height="80" class="rounded-circle">
+                                    {% else %}
+                                    <img src="https://w7.pngwing.com/pngs/340/946/png-transparent-avatar-user-computer-icons-software-developer-avatar-child-face-heroes-thumbnail.png" alt="Profile" width="80" height="80" class="rounded-circle">
+            
+                                    {% endif %}
                         </td>
-                        <td>{{eachstudent.first_name}} {{eachstudent.last_name}}</td>
-                         {% for cohorts in eachstudent.cohortgroup_set.all %}
-                         
-                       
-                        <td>{{cohorts.name}}</td>
+                        <td>{{ homepage.first_name }} {{ homepage.last_name }}</td>
 
-                        {% endfor %}
+                        <!-- Cohort Group -->
+                        <td>
+                            {% if homepage.cohort %}
+                                {{ homepage.cohort.name }}
+                            {% else %}
+                                No Cohort
+                            {% endif %}
+                        </td>
 
-                        {% if  eachstudent.program_set.exists  %}
-                        
-                        {% for program in  eachstudent.program_set.all %}
-                        <td>{{program.courses}} </td>
-                        {% endfor %}
-                        
-                        {% else %}
-                        <td>No course </td>
-                        {% endif %}
-    
-                       
-                    
-                        <td><span class="badge bg-success text-white">{{eachstudent.status|yesno:'active,inactive'}}</span></td>
-                        <td>{{eachstudent.date_join |date:'M,j,Y'}}</td>
+                        <!-- Program Courses -->
+                        <td>
+                            {% if homepage.program %}
+                                {{ homepage.program.courses }}
+                            {% else %}
+                                No course
+                            {% endif %}
+                        </td>
 
-                        {% if eachstudent.student_profile.rating %}
-                        <td class="text-success">{{eachstudent.student_profile.rating}}</td>
-                        {% else %}
-                        <td class="text-danger">0.0</td>
-                        {% endif %}
-                        
-                        
-                        <td><span class="badge bg-primary text-white">{{eachstudent.student_type}} </span></td>
+                        <!-- Status -->
+                        <td>
+                            <span class="badge bg-success text-white">{{ homepage.status|yesno:"active,inactive" }}</span>
+                        </td>
+
+                        <!-- Date Joined -->
+                        <td>{{ homepage.date_joined|date:"M j, Y" }}</td>
+
+                        <!-- Rating -->
+                        <td>
+                            {% if homepage.rating %}
+                                <span class="text-success">{{ homepage.rating }}</span>
+                            {% else %}
+                                <span class="text-danger">0.0</span>
+                            {% endif %}
+                        </td>
+
+                        <!-- Student Type -->
+                        <td><span class="badge bg-primary text-white">{{ homepage.student_type }}</span></td>
+
+                        <!-- Actions -->
                         <td>
                             <a href="#" class="btn btn-sm btn-outline-primary">
                                 <i class="fas fa-eye"></i> View
                             </a>
                         </td>
-
                     </tr>
-
                     {% endfor %}
-                    <!-- Add more rows as needed -->
                 </tbody>
             </table>
         </div>
@@ -136,8 +117,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <!-- Add User Form -->
-                    <form action="{% url "homeview" %}" method="post">
+                    <form action="{% url 'add_student' %}" method="post">
                         {% csrf_token %}
                         <div class="mb-3">
                             <label for="profileImage" class="form-label">Profile Image URL</label>

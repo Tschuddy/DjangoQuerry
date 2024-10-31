@@ -1,14 +1,21 @@
-from django.urls import path
-# from .home import HomepageView
-from . import views
+# from django.urls import path
+# from . import views
 
 
-urlpatterns = [
-    # path('', HompageView.as_view(), name='homeview')
-    path('', views.homepage, name='homepage'),
-    # path('homeview', HomepageView.as_view(), name='homeview')
-    path('homeview', views.homepage, name='homeview')
+# urlpatterns = [
+    
+#     path('', views.homepage, name='homepage'),
+#     path('homeview', views.homepage, name='homeview')
     
    
 
+# ]
+
+
+from django.urls import path
+from . import views
+
+urlpatterns = [
+    path('', views.home_view, name='homeview'),
+    path('add_student/', views.add_student, name='add_student'),
 ]
